@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const fs = require('fs');
 //
 const coreRouter = require('./src/core/router');
+require('./src/libs/sequelize');
 
 const app = new Koa();
 //

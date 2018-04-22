@@ -10,13 +10,22 @@
   "author": "Oleksii Starovoitenko",
   "license": "ISC",
   "dependencies": {
+    "jsonwebtoken": "^8.2.1",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
     "koa-compress": "^3.0.0",
     "koa-helmet": "^4.0.0",
     "koa-joi-validate": "^0.5.1",
+    "koa-passport": "^4.0.1",
     "koa-router": "^7.4.0",
-    "koa2-cors": "^2.0.5"
+    "koa2-cors": "^2.0.5",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.37.6",
+    "sequelize-cli": "^4.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.17.3"
