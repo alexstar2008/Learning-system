@@ -1,7 +1,7 @@
 'use strict';
 
 const Strategy = require('passport-local').Strategy;
-const User = require('../../core/models/User');
+const { user: User } = require('../../libs/sequelize');
 
 
 const LocalStrategy = new Strategy({
