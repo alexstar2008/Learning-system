@@ -3,6 +3,7 @@ const passport = require('passport');
 //
 const { auth: { secret } } = require('../../config');
 const User = require('./models/User');
+const Group = require('./models/Group');
 
 function sendToken(ctx) {
     const TWO_HOURS = 2 * 60 * 60;
@@ -11,12 +12,12 @@ function sendToken(ctx) {
         expiresIn: TWO_HOURS
     });
     let nullFilter = {};
-    for(let key in user.dataValues){
-        if(user.dataValues[key]!==null){
+    for (let key in user.dataValues) {
+        if (user.dataValues[key] !== null) {
             nullFilter[key] = user.dataValues[key];
         }
     }
-    const {password, ...userData} = nullFilter;
+    const { password, ...userData } = nullFilter;
     ctx.body = { success: true, token, user: userData };
 }
 //
@@ -44,9 +45,34 @@ async function auth(ctx) {
     })(ctx);
 }
 
+//
+//
+async function createGroup(ctx) {
+    const data = ctx.request.body;
+    const group = await Group.create(data);
+    ctx.body = {
+        success: true,
+        groupId: group.get('id'),
+        message: 'Group was successfully created'
+    };
+}
+async function getGroupList(ctx) {
+    const groups = await Group.findAll({
+        attributes: ['id', 'name', 'course']
+    });
+    ctx.body = {
+        success: true,
+        groups
+    };
+}
+
+
 const CoreController = {
     register,
-    auth
+    auth,
+    //
+    createGroup,
+    getGroupList
 };
 
 module.exports = CoreController
