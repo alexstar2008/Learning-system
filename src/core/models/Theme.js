@@ -17,7 +17,7 @@ module.exports = function (sequelize, Sequelize) {
             timestamps: false
         });
     Theme.associate = models => {
-        Theme.hasOne(models.question);
+        Theme.hasMany(models.question, { foreignKey: 'themeId' });
         Theme.hasMany(models.mark);
         Theme.hasMany(models.document, { foreignKey: 'themeId' });
     };

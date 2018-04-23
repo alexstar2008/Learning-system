@@ -33,7 +33,7 @@ async function register(ctx) {
     const user = await User.create(data);
     if (groupId) {
         const group = await Group.findOne({ id: groupId });
-        await group.setUsers(user);
+        await group.addUsers(user);
     }
     ctx.state.user = user;
     sendToken(ctx);
@@ -111,13 +111,13 @@ async function getQuestionsWithAnswers(ctx) {
 async function createQuestionWithAnswers(ctx) {
     const { question: { text, isMulty }, answers: answersRaw, themeId } = ctx.request.body;
 
-    const answersData = answersRaw.map(({ text, create }) => ({ text, create }));
+    const answersData = answersRaw.map(({ text, correct }) => ({ text, correct }));
     //
     const theme = await Theme.findOne({ where: { id: themeId } });
     const question = await Question.create({ text, isMulty });
     const answers = await Answer.bulkCreate(answersData);
     const res = await question.setAnswers(answers);
-    await theme.setQuestion(question);
+    await theme.addQuestions(question);
 
     ctx.body = {
         success: true,
@@ -131,8 +131,8 @@ async function createMark(ctx) {
     const { user } = ctx.state;
     const mark = await Mark.create({ score });
     const theme = await Theme.findOne({ id: themeId });
-    await user.setMarks(mark);
-    await theme.setMarks(mark);
+    await user.addMarks(mark);
+    await theme.addMarks(mark);
 
     ctx.body = {
         success: true,
