@@ -154,6 +154,56 @@ async function getMarksForStudent(ctx) {
     };
 };
 
+// group data
+async function getStudentsOfGroupWithRating(ctx) {
+    const { id } = ctx.params;
+    const group = await Group.findOne({
+        id,
+        include: [{
+            model: User,
+            include: [{
+                model: Mark,
+                include: [Theme]
+            }],
+            attributes: ['name']
+        }],
+        attributes: ['name', 'course']
+    });
+    const markByTheme = {};
+    const users = group.users.map(user => {
+        const marks = user.marks.reduce((prev, next) => {
+            prev.push({ score: next.score, theme: next.theme.name });
+            const themeName = next.theme.name;
+            if (!markByTheme[themeName]) {
+                markByTheme[themeName] = [];
+                markByTheme[themeName].push(next.score);
+            }
+            return prev;
+        }, []);
+        return { student: user.name, marks };
+    });
+    //
+    const avgMarksByTheme = [];
+    for (let theme in markByTheme) {
+        const len = markByTheme[theme].length;
+        const markSum = markByTheme[theme].reduce((prev, next) => prev + next, 0);
+        avgMarksByTheme.push({
+            theme,
+            score: markSum / len
+        });
+    }
+
+    ctx.body = {
+        success: true,
+        group: {
+            name: group.name,
+            course: group.course
+        },
+        users,
+        avgMarks: avgMarksByTheme
+    }
+}
+
 
 const CoreController = {
     register,
@@ -161,6 +211,7 @@ const CoreController = {
     //
     createGroup,
     getGroupList,
+    getStudentsOfGroupWithRating,
     //
     getQuestionsWithAnswers,
     createQuestionWithAnswers,
