@@ -29,8 +29,12 @@ function sendToken(ctx) {
 //
 //
 async function register(ctx) {
-    const data = ctx.request.body;
+    const { groupId, ...data } = ctx.request.body;
     const user = await User.create(data);
+    if (groupId) {
+        const group = await Group.findOne({ id: groupId });
+        await group.setUsers(user);
+    }
     ctx.state.user = user;
     sendToken(ctx);
 }
@@ -136,6 +140,7 @@ async function createMark(ctx) {
         message: 'Score was successfullly saved'
     };
 };
+
 async function getMarksForStudent(ctx) {
     const { id: userId } = ctx.state.user;
     const user = await User.findOne({ id }, { include: [Mark] });
@@ -159,7 +164,10 @@ const CoreController = {
     createQuestionWithAnswers,
     //
     createTheme,
-    getThemes
+    getThemes,
+    //
+    createMark,
+    getMarksForStudent
 };
 
 module.exports = CoreController

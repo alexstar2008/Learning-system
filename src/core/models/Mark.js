@@ -12,13 +12,13 @@ module.exports = function (sequelize, Sequelize) {
         themeId: {
             type: Sequelize.UUID,
             reference: {
-                model: Sequelize.models.theme
+                model: sequelize.models.theme
             }
         },
         userId: {
             type: Sequelize.UUID,
             reference: {
-                model: Sequelize.models.user
+                model: sequelize.models.user
             }
         }
     });

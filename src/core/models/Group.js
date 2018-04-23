@@ -15,6 +15,9 @@ module.exports = function (sequelize, Sequelize) {
             allowNull: false
         }
     });
+    Group.associate = models => {
+        Group.hasMany(models.user, { foreignKey: 'groupId' });
+    };
     Group.sync();
 
     return Group;

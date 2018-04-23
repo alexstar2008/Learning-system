@@ -33,6 +33,13 @@ module.exports = function (sequelize, Sequelize) {
         },
         position: {
             type: Sequelize.STRING
+        },
+        groupId: {
+            type: Sequelize.UUID,
+            reference: {
+                model: sequelize.models.group,
+                key: 'id'
+            }
         }
     }, {
             timestamps: true
