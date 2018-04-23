@@ -20,5 +20,8 @@ router.post('/themes', coreController.createTheme);
 //
 router.get('/questions/:themeId', coreController.getQuestionsWithAnswers);
 router.post('/questions', coreController.createQuestionWithAnswers);
+//
+router.post('/mark', coreController.createMark);
+router.get('/mark', coreController.getMarksForStudent);
 
 module.exports = router;

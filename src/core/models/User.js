@@ -39,6 +39,7 @@ module.exports = function (sequelize, Sequelize) {
         });
 
     User.associate = models => {
+        User.hasMany(models.mark, { foreignKey: 'userId' });
         User.belongsTo(models.group, { foreignKey: 'groupId' });
     };
 

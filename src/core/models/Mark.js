@@ -8,10 +8,23 @@ module.exports = function (sequelize, Sequelize) {
         },
         score: {
             type: Sequelize.STRING
+        },
+        themeId: {
+            type: Sequelize.UUID,
+            reference: {
+                model: Sequelize.models.theme
+            }
+        },
+        userId: {
+            type: Sequelize.UUID,
+            reference: {
+                model: Sequelize.models.user
+            }
         }
     });
     Mark.associate = models => {
-        Mark.belongsTo(models.theme, { foreignKey: 'theme_id' });
+        Mark.belongsTo(models.user, { foreignKey: 'userId' });
+        Mark.belongsTo(models.theme, { foreignKey: 'themeId' });
     };
 
 

@@ -2,7 +2,14 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 //
 const { auth: { secret } } = require('../../config');
-const { user: User, group: Group, question: Question, answer: Answer, theme: Theme } = require('../libs/sequelize');
+const {
+    user: User,
+    group: Group,
+    question: Question,
+    answer: Answer,
+    theme: Theme,
+    mark: Mark
+} = require('../libs/sequelize');
 
 function sendToken(ctx) {
     const TWO_HOURS = 2 * 60 * 60;
@@ -115,7 +122,30 @@ async function createQuestionWithAnswers(ctx) {
 }
 
 // score
+async function createMark(ctx) {
+    const { score, themeId } = ctx.request.body;
+    const { id: userId } = ctx.state.user;
+    const mark = await Mark.create({ score });
+    const user = await User.findOne({ id });
+    const theme = await Them.findOne({ id: themeId });
+    await user.setMark(mark);
+    await theme.setMark(mark);
 
+    ctx.body = {
+        success: true,
+        message: 'Score was successfullly saved'
+    };
+};
+async function getMarksForStudent(ctx) {
+    const { id: userId } = ctx.state.user;
+    const user = await User.findOne({ id }, { include: [Mark] });
+
+    const marks =
+        ctx.body = {
+            success: true,
+            marks: user.marks
+        };
+};
 
 
 const CoreController = {

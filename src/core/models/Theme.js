@@ -18,6 +18,7 @@ module.exports = function (sequelize, Sequelize) {
         });
     Theme.associate = models => {
         Theme.hasOne(models.question);
+        Theme.hasMany(models.mark);
     };
 
 
