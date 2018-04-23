@@ -14,6 +14,11 @@ router.post('/auth', coreController.auth);
 //
 router.post('/groups', coreController.createGroup);
 router.get('/groups', coreController.getGroupList);
-
+//
+router.get('/themes', coreController.getThemes);
+router.post('/themes', coreController.createTheme);
+//
+router.get('/questions/:themeId', coreController.getQuestionsWithAnswers);
+router.post('/questions', coreController.createQuestionWithAnswers);
 
 module.exports = router;

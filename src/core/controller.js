@@ -2,8 +2,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 //
 const { auth: { secret } } = require('../../config');
-const User = require('./models/User');
-const Group = require('./models/Group');
+const { user: User, group: Group, question: Question, answer: Answer, theme: Theme } = require('../libs/sequelize');
 
 function sendToken(ctx) {
     const TWO_HOURS = 2 * 60 * 60;
@@ -45,8 +44,7 @@ async function auth(ctx) {
     })(ctx);
 }
 
-//
-//
+// groups
 async function createGroup(ctx) {
     const data = ctx.request.body;
     const group = await Group.create(data);
@@ -66,13 +64,72 @@ async function getGroupList(ctx) {
     };
 }
 
+// themes
+async function createTheme(ctx) {
+    const data = ctx.request.body;
+    const theme = await Theme.create(data);
+
+    ctx.body = {
+        success: true,
+        themeId: theme.id,
+        message: 'Successfully created'
+    };
+}
+async function getThemes(ctx) {
+    const themes = await Theme.findAll();
+    ctx.body = {
+        success: true,
+        themes
+    };
+}
+
+// questions
+async function getQuestionsWithAnswers(ctx) {
+    const { themeId } = ctx.params;
+    const questions = await Question.findAll({
+        where: {
+            themeId
+        },
+        include: [Answer]
+    });
+    ctx.body = {
+        success: true,
+        questions
+    };
+}
+async function createQuestionWithAnswers(ctx) {
+    const { question: { text, isMulty }, answers: answersRaw, themeId } = ctx.request.body;
+
+    const answersData = answersRaw.map(({ text, create }) => ({ text, create }));
+    //
+    const theme = await Theme.findOne({ where: { id: themeId } });
+    const question = await Question.create({ text, isMulty });
+    const answers = await Answer.bulkCreate(answersData);
+    const res = await question.setAnswers(answers);
+    await theme.setQuestion(question);
+
+    ctx.body = {
+        success: true,
+        message: 'Question was created successfully'
+    };
+}
+
+// score
+
+
 
 const CoreController = {
     register,
     auth,
     //
     createGroup,
-    getGroupList
+    getGroupList,
+    //
+    getQuestionsWithAnswers,
+    createQuestionWithAnswers,
+    //
+    createTheme,
+    getThemes
 };
 
 module.exports = CoreController

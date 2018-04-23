@@ -1,5 +1,5 @@
 module.exports = function (sequelize, Sequelize) {
-    const Group = sequelize.define('group', {
+    const Theme = sequelize.define('theme', {
         id: {
             type: Sequelize.UUID,
             defaultValue: Sequelize.UUIDV1,
@@ -10,12 +10,20 @@ module.exports = function (sequelize, Sequelize) {
             allowNull: false,
             unique: true
         },
-        course: {
-            type: Sequelize.INTEGER,
-            allowNull: false
+        desc: {
+            type: Sequelize.STRING
         }
-    });
-    Group.sync();
+    }, {
+            timestamps: false
+        });
+    Theme.associate = models => {
+        Theme.hasOne(models.question);
+    };
 
-    return Group;
+
+    Theme.sync();
+
+
+
+    return Theme;
 };
