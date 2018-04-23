@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 //
 const coreController = require('./controller');
-
+const passport = require('passport');
 const router = new Router();
 
 
@@ -21,6 +21,10 @@ router.post('/themes', coreController.createTheme);
 router.get('/questions/:themeId', coreController.getQuestionsWithAnswers);
 router.post('/questions', coreController.createQuestionWithAnswers);
 //
+//
+router.use(async function jwt(ctx, next) {
+    await passport.authenticate('jwt', { session: false })(ctx, next);
+});
 router.post('/mark', coreController.createMark);
 router.get('/mark', coreController.getMarksForStudent);
 

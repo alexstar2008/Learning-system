@@ -128,12 +128,11 @@ async function createQuestionWithAnswers(ctx) {
 // score
 async function createMark(ctx) {
     const { score, themeId } = ctx.request.body;
-    const { id: userId } = ctx.state.user;
+    const { user } = ctx.state;
     const mark = await Mark.create({ score });
-    const user = await User.findOne({ id });
-    const theme = await Them.findOne({ id: themeId });
-    await user.setMark(mark);
-    await theme.setMark(mark);
+    const theme = await Theme.findOne({ id: themeId });
+    await user.setMarks(mark);
+    await theme.setMarks(mark);
 
     ctx.body = {
         success: true,
@@ -142,14 +141,17 @@ async function createMark(ctx) {
 };
 
 async function getMarksForStudent(ctx) {
-    const { id: userId } = ctx.state.user;
-    const user = await User.findOne({ id }, { include: [Mark] });
-
-    const marks =
-        ctx.body = {
-            success: true,
-            marks: user.marks
-        };
+    const { user: { id } } = ctx.state;
+    const user = await User.findOne(
+        {
+            where: { id },
+            include: [Mark]
+        }
+    );
+    ctx.body = {
+        success: true,
+        marks: user.marks
+    };
 };
 
 
