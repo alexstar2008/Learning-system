@@ -4,5 +4,14 @@ module.exports = {
     },
     auth: {
         secret: 'kpi-city'
+    },
+    aws: {
+        credentials: {
+            accessKeyId: 'AKIAJ3AMT4TUP2O67BNQ',
+            secretAccessKey: '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'
+        },
+        buckets: {
+            ls: 'learning-systems-test'
+        }
     }
 };

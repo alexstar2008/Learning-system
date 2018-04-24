@@ -18,6 +18,8 @@ router.get('/groups/:id', coreController.getStudentsOfGroupWithRating);
 //
 router.get('/themes', coreController.getThemes);
 router.post('/themes', coreController.createTheme);
+router.post('/docs', coreController.addDocToTheme);
+router.get('/docs/:id', coreController.getDocsOfTheme);
 //
 router.get('/questions/:themeId', coreController.getQuestionsWithAnswers);
 router.post('/questions', coreController.createQuestionWithAnswers);

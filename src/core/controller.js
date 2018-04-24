@@ -2,13 +2,15 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 //
 const { auth: { secret } } = require('../../config');
+const AwsController = require('../libs/aws');
 const {
     user: User,
     group: Group,
     question: Question,
     answer: Answer,
     theme: Theme,
-    mark: Mark
+    mark: Mark,
+    document: Document
 } = require('../libs/sequelize');
 
 function sendToken(ctx) {
@@ -93,6 +95,31 @@ async function getThemes(ctx) {
         themes
     };
 }
+async function addDocToTheme(ctx) {
+    const { doc, themeId, name } = ctx.request.body;
+
+    const url = await AwsController.uploadImg(doc, 'ls', themeId + Date.now());
+    const document = await Document.create({ name, file: url });
+    const theme = await Theme.findOne({ where: { id: themeId } });
+    await theme.addDocuments(document);
+
+    ctx.body = {
+        success: true,
+        message: 'Document was successfully loaded'
+    }
+}
+async function getDocsOfTheme(ctx) {
+    const { id } = ctx.params;
+    const theme = await Theme.findOne({
+        where: { id },
+        include: [Document]
+    });
+    ctx.body = {
+        success: true,
+        docs: theme.documents
+    };
+}
+
 
 // questions
 async function getQuestionsWithAnswers(ctx) {
@@ -218,6 +245,8 @@ const CoreController = {
     //
     createTheme,
     getThemes,
+    addDocToTheme,
+    getDocsOfTheme,
     //
     createMark,
     getMarksForStudent
