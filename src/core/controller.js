@@ -206,8 +206,8 @@ async function getStudentsOfGroupWithRating(ctx) {
             const themeName = next.theme.name;
             if (!markByTheme[themeName]) {
                 markByTheme[themeName] = [];
-                markByTheme[themeName].push(next.score);
             }
+            markByTheme[themeName].push(+next.score);
             return prev;
         }, []);
         return { student: user.name, marks };
