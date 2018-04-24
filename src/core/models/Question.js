@@ -10,9 +10,9 @@ module.exports = function (sequelize, Sequelize) {
             type: Sequelize.STRING,
             allowNull: false
         },
-        isMulty: {
-            type: Sequelize.BOOLEAN,
-            defaultValue: false
+        type: {
+            type: Sequelize.STRING,
+            defaultValue: 'single'
         },
         themeId: {
             type: Sequelize.UUID,

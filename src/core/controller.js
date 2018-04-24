@@ -136,12 +136,12 @@ async function getQuestionsWithAnswers(ctx) {
     };
 }
 async function createQuestionWithAnswers(ctx) {
-    const { question: { text, isMulty }, answers: answersRaw, themeId } = ctx.request.body;
+    const { question: { text, type }, answers: answersRaw, themeId } = ctx.request.body;
 
     const answersData = answersRaw.map(({ text, correct }) => ({ text, correct }));
     //
     const theme = await Theme.findOne({ where: { id: themeId } });
-    const question = await Question.create({ text, isMulty });
+    const question = await Question.create({ text, type });
     const answers = await Answer.bulkCreate(answersData);
     const res = await question.setAnswers(answers);
     await theme.addQuestions(question);
