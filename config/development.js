@@ -13,5 +13,6 @@ module.exports = {
         buckets: {
             ls: 'learning-systems-test'
         }
-    }
+    },
+    questionAmount: 30
 };

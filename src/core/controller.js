@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const _ = require('underscore');
 //
-const { auth: { secret } } = require('../../config');
+const { auth: { secret }, questionAmount } = require('../../config');
 const AwsController = require('../libs/aws');
 const {
     user: User,
@@ -130,9 +131,11 @@ async function getQuestionsWithAnswers(ctx) {
         },
         include: [Answer]
     });
+    const questionsShuffle = _.shuffle(questions).slice(0, questionAmount);
+    
     ctx.body = {
         success: true,
-        questions
+        questions: questionsShuffle
     };
 }
 async function createQuestionWithAnswers(ctx) {
