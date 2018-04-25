@@ -230,7 +230,7 @@ async function getStudentsOfGroupWithRating(ctx) {
             course: group.course
         },
         users,
-        avgMarks: avgMarksByTheme
+        avgMarks: Math.floor(avgMarksByTheme)
     }
 }
 
