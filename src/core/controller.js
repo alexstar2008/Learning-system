@@ -219,7 +219,7 @@ async function getStudentsOfGroupWithRating(ctx) {
         const markSum = markByTheme[theme].reduce((prev, next) => prev + next, 0);
         avgMarksByTheme.push({
             theme,
-            score: markSum / len
+            score: Math.floor(markSum / len)
         });
     }
 
@@ -230,7 +230,7 @@ async function getStudentsOfGroupWithRating(ctx) {
             course: group.course
         },
         users,
-        avgMarks: Math.floor(avgMarksByTheme)
+        avgMarks: avgMarksByTheme
     }
 }
 
